@@ -38,9 +38,29 @@ A new Flutter plugin project.
   s.swift_version = '5.0'
 
   # Copy Steam library to app bundle
-  s.script_phase = {
+  s.script_phases = [{
     :name => 'Copy Steam Library',
-    :script => 'cp -f "${PODS_TARGET_SRCROOT}/libsteam_api.dylib" "${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/A/" || true',
-    :execution_position => :after_compile
-  }
+    :execution_position => :after_compile,
+    :input_files => ['${PODS_TARGET_SRCROOT}/libsteam_api.dylib'],
+    :output_files => [
+      '${TARGET_BUILD_DIR}/flutter_steamworks.framework/Versions/A/libsteam_api.dylib'
+    ],
+    :script => <<-SCRIPT
+set -e
+
+SRC="${PODS_TARGET_SRCROOT}/libsteam_api.dylib"
+
+if [ -f "${SRC}" ]; then
+  DEST="${TARGET_BUILD_DIR}/flutter_steamworks.framework/Versions/A"
+  if [ -d "${DEST}" ]; then
+    cp -f "${SRC}" "${DEST}/libsteam_api.dylib"
+
+    if command -v /usr/bin/codesign >/dev/null 2>&1; then
+      /usr/bin/codesign --force --sign - "${DEST}/libsteam_api.dylib"
+      /usr/bin/codesign --force --sign - "$(dirname "$(dirname "${DEST}")")"
+    fi
+  fi
+fi
+SCRIPT
+  }]
 end
