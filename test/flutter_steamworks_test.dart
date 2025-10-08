@@ -10,6 +10,9 @@ class MockFlutterSteamworksPlatform
 
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<bool> initSteam(int appId) => Future.value(appId == 480);
 }
 
 void main() {
@@ -25,5 +28,14 @@ void main() {
     FlutterSteamworksPlatform.instance = fakePlatform;
 
     expect(await flutterSteamworksPlugin.getPlatformVersion(), '42');
+  });
+
+  test('initSteam forwards appId', () async {
+    FlutterSteamworks flutterSteamworksPlugin = FlutterSteamworks();
+    MockFlutterSteamworksPlatform fakePlatform = MockFlutterSteamworksPlatform();
+    FlutterSteamworksPlatform.instance = fakePlatform;
+
+    expect(await flutterSteamworksPlugin.initSteam(480), isTrue);
+    expect(await flutterSteamworksPlugin.initSteam(123), isFalse);
   });
 }

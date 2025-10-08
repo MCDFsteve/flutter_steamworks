@@ -37,10 +37,10 @@ class _MyAppState extends State<MyApp> {
       platformVersion = 'Failed to get platform version.';
     }
 
-    // 初始化 Steam
+    // 初始化 Steam，使用 Spacewar (480) 作为默认示例 App ID
     bool steamInitialized = false;
     try {
-      steamInitialized = await _flutterSteamworksPlugin.initSteam();
+      steamInitialized = await _flutterSteamworksPlugin.initSteam(480);
     } on PlatformException catch (e) {
       print('Failed to initialize Steam: $e');
     }

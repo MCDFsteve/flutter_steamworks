@@ -13,10 +13,33 @@ public class FlutterSteamworksPlugin: NSObject, FlutterPlugin {
     case "getPlatformVersion":
       result("macOS " + ProcessInfo.processInfo.operatingSystemVersionString)
     case "initSteam":
-      let success = SteamBridge.initSteam()
+      guard
+        let arguments = call.arguments as? [String: Any],
+        let appIdValue = arguments["appId"],
+        let appIdString = FlutterSteamworksPlugin.appIdString(from: appIdValue)
+      else {
+        result(FlutterError(code: "invalid-argument", message: "App ID is required", details: nil))
+        return
+      }
+
+      let success = SteamBridge.initSteam(withAppId: appIdString)
       result(success)
     default:
       result(FlutterMethodNotImplemented)
     }
+  }
+}
+
+private extension FlutterSteamworksPlugin {
+  static func appIdString(from value: Any) -> String? {
+    if let string = value as? String, !string.isEmpty {
+      return string
+    }
+
+    if let number = value as? NSNumber {
+      return number.stringValue
+    }
+
+    return nil
   }
 }

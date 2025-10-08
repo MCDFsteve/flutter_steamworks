@@ -3,11 +3,16 @@
 
 @implementation SteamBridge
 
-+ (BOOL)initSteam {
-    // 设置 Steam App ID (Spacewar 480)
-    setenv("SteamAppId", "480", 1);
++ (BOOL)initSteamWithAppId:(NSString *)appId {
+    if (appId.length == 0) {
+        NSLog(@"[SteamBridge] Invalid App ID");
+        return NO;
+    }
 
-    // 初始化 Steam API
+    const char *appIdCString = [appId UTF8String];
+    setenv("SteamAppId", appIdCString, 1);
+    setenv("SteamGameId", appIdCString, 1);
+
     bool success = SteamAPI_Init();
     if (success) {
         NSLog(@"Steam API initialized successfully");

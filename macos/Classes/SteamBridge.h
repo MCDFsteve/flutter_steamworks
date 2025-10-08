@@ -4,7 +4,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SteamBridge : NSObject
 
-+ (BOOL)initSteam;
++ (BOOL)initSteamWithAppId:(NSString *)appId;
 + (void)shutdown;
 
 @end

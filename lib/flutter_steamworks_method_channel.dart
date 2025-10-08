@@ -16,8 +16,9 @@ class MethodChannelFlutterSteamworks extends FlutterSteamworksPlatform {
   }
 
   @override
-  Future<bool> initSteam() async {
-    final result = await methodChannel.invokeMethod<bool>('initSteam');
+  Future<bool> initSteam(int appId) async {
+    final result =
+        await methodChannel.invokeMethod<bool>('initSteam', <String, dynamic>{'appId': appId});
     return result ?? false;
   }
 }

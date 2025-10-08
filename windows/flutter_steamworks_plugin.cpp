@@ -51,6 +51,8 @@ void FlutterSteamworksPlugin::HandleMethodCall(
       version_stream << "7";
     }
     result->Success(flutter::EncodableValue(version_stream.str()));
+  } else if (method_call.method_name().compare("initSteam") == 0) {
+    result->Success(flutter::EncodableValue(false));
   } else {
     result->NotImplemented();
   }

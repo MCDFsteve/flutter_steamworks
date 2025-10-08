@@ -27,7 +27,7 @@ abstract class FlutterSteamworksPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<bool> initSteam() {
+  Future<bool> initSteam(int appId) {
     throw UnimplementedError('initSteam() has not been implemented.');
   }
 }

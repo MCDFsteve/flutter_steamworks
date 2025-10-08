@@ -6,9 +6,9 @@ class FlutterSteamworks {
     return FlutterSteamworksPlatform.instance.getPlatformVersion();
   }
 
-  /// 初始化 Steam API
-  /// 返回 true 表示初始化成功
-  Future<bool> initSteam() async {
-    return await FlutterSteamworksPlatform.instance.initSteam();
+  /// 初始化 Steam API 并通知 Steam 正在游玩指定 App
+  /// [appId] 对应 Steam 上的应用 ID
+  Future<bool> initSteam(int appId) async {
+    return FlutterSteamworksPlatform.instance.initSteam(appId);
   }
 }

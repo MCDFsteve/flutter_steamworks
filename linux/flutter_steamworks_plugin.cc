@@ -28,6 +28,9 @@ static void flutter_steamworks_plugin_handle_method_call(
 
   if (strcmp(method, "getPlatformVersion") == 0) {
     response = get_platform_version();
+  } else if (strcmp(method, "initSteam") == 0) {
+    g_autoptr(FlValue) result_value = fl_value_new_bool(FALSE);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result_value));
   } else {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
