@@ -6,7 +6,10 @@
       "Bash(flutter pub get)",
       "Bash(flutter clean)",
       "Bash(open build/macos/Build/Products/Debug/flutter_steamworks_example.app)",
-      "Bash(flutter run -d macos)"
+      "Bash(flutter run -d macos)",
+      "Read(//Users/dfsteve/Library/**)",
+      "Read(//Applications/**)",
+      "Bash(flutter run -d macos --no-build)"
     ],
     "deny": [],
     "ask": []
