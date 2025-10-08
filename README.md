@@ -1,6 +1,13 @@
 # flutter_steamworks
 
-一个用于在桌面端 Flutter 应用里初始化 Steamworks SDK 的简易插件。目前聚焦于 **macOS**，帮助应用在启动时向 Steam 客户端报告“正在游玩”，展示基础的在线状态。Windows / Linux 版本仍处于占位阶段，会返回 `false` 而不会触发崩溃，方便后续扩展。
+让 Flutter 开发的桌面游戏、壁纸引擎、桌宠等应用能够直接调用 Steamworks 接口的插件。目前聚焦于 **macOS**，用于在应用启动时向 Steam 客户端上报游玩状态并打通后续 Steam 特性。Windows / Linux 版本仍处于占位阶段，会返回 `false` 而不会触发崩溃，方便后续扩展。
+
+> ⚠️ **最重要的一步：确保在 macOS 构建目标中关闭 App Sandbox。**
+>
+> 如果不关闭沙箱（Xcode `Signing & Capabilities` → `App Sandbox` 关闭或移除），应用进程无法与 Steam 客户端通信，`initSteam` 会一直失败并无法显示游玩状态。你也可以直接编辑 entitlements 文件来取消沙箱：
+> - 修改 `macos/Runner/DebugProfile.entitlements` 与 `macos/Runner/Release.entitlements`，定位 `<key>com.apple.security.app-sandbox</key>`。
+> - 将紧随其后的 `<true/>` 替换为 `<false/>`，或连同该键一起删除。
+> - 重新构建 Flutter macOS 应用即可验证 Steam 连接是否恢复。
 
 ## 特性
 - 通过 `initSteam(appId)` 初始化 Steam API，成功后 Steam 会显示对应 AppID 的游玩状态。
