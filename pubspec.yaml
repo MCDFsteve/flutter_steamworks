@@ -1,7 +1,13 @@
 name: flutter_steamworks
-description: "A new Flutter plugin project."
+description: "Flutter 插件，在桌面端初始化 Steamworks SDK 并向 Steam 客户端报告游玩状态。"
 version: 0.0.1
-homepage:
+homepage: https://github.com/MCDFsteve/flutter_steamworks
+repository: https://github.com/MCDFsteve/flutter_steamworks
+issue_tracker: https://github.com/MCDFsteve/flutter_steamworks/issues
+topics:
+  - steam
+  - desktop
+  - flutter-plugin
 
 environment:
   sdk: ^3.9.0
