@@ -14,7 +14,7 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
 
 SPEC CHECKSUMS:
-  flutter_steamworks: 3e2644548fc3707c1c8e6491a595077722cb2a04
+  flutter_steamworks: 24d022b3907352a560fb585b4951e09ce9a031d0
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
 
 PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009

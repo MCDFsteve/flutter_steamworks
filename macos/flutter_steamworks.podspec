@@ -20,7 +20,7 @@ A new Flutter plugin project.
   # Steam SDK
   s.vendored_libraries = 'libsteam_api.dylib'
   s.xcconfig = {
-    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/../sdk/public/steam"',
+    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/../third_party/steamworks/public/steam"',
     'LD_RUNPATH_SEARCH_PATHS' => '$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks',
     'OTHER_LDFLAGS' => '-lc++'
   }
