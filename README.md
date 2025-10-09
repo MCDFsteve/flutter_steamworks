@@ -1,6 +1,6 @@
 # flutter_steamworks
 
-让 Flutter 开发的桌面游戏、壁纸引擎、桌宠等应用能够直接调用 Steamworks 接口的插件。目前聚焦于 **macOS**，用于在应用启动时向 Steam 客户端上报游玩状态并打通后续 Steam 特性。Windows / Linux 版本仍处于占位阶段，会返回 `false` 而不会触发崩溃，方便后续扩展。
+让 Flutter 开发的桌面游戏、壁纸引擎、桌宠等应用能够直接调用 Steamworks 接口的插件。在应用启动时向 Steam 客户端上报游玩状态并打通后续 Steam 特性，现已支持 **macOS / Linux / Windows** 三端共用同一套 Dart API。
 
 > ⚠️ **最重要的一步：确保在 macOS 构建目标中关闭 App Sandbox。**
 >
@@ -12,7 +12,7 @@
 ## 特性
 - 通过 `initSteam(appId)` 初始化 Steam API，成功后 Steam 会显示对应 AppID 的游玩状态。
 - 提供通用的 MethodChannel 封装，Dart 侧仅需传入整数 AppID。
-- 自带 macOS 的 `libsteam_api.dylib` 与必要的头文件，避免项目在依赖时拷贝完整 SDK。
+- macOS 内置 `libsteam_api.dylib`，Linux / Windows 只需把官方 SDK 的运行库放到约定目录即可自动复制到产物里。
 
 ## 安装
 在目标项目的 `pubspec.yaml` 中添加 git 依赖：
@@ -47,9 +47,22 @@ Future<void> setupSteam() async {
 > 2. AppID 必须是合法的 Steam 应用。如果只是测试，可以用 Valve 提供的 Spacewar(`480`)。
 > 3. 在 macOS 上运行时，macOS 会校验应用及依赖项签名。插件内部已对嵌入的 `libsteam_api.dylib` 和插件框架进行 adhoc 签名，如需发布版本请结合自己的签名证书重新处理。
 
+### 分发 Steam 运行库
+
+插件会按下表依次查找 Steam SDK 的运行库，并在构建完成后自动拷贝到 Flutter 桌面应用目录。请从 Valve 官方 SDK 中拷贝对应文件到任意一个候选位置：
+
+| 平台 | 必需文件 | 搜索顺序（命中即停止） |
+| --- | --- | --- |
+| macOS | `macos/libsteam_api.dylib` | 仓库内已提供 |
+| Linux | `libsteam_api.so`（建议 64 位版本） | `linux/libsteam_api.so(.1)` → `third_party/steamworks/redistributable_bin/linux64/` → `third_party/steamworks/public/steam/lib/linux64/` → 系统默认搜索路径 |
+| Windows | `steam_api64.dll` | `windows/steam_api64.dll` → `third_party/steamworks/redistributable_bin/win64/` → `third_party/steamworks/public/steam/lib/win64/` → 系统默认搜索路径 |
+
+> Flutter 桌面默认构建 64 位二进制，如需 32 位 Runner，请自行放置 `steam_api.dll` 并在相同目录扩展搜索逻辑。
+
+插件内部会在初始化成功后缓存上下文，并在插件析构时自动调用 `SteamAPI_Shutdown()`。重复调用 `initSteam` 会复用已经建立的连接。
+
 ## 可扩展方向
-- 目前只实现了 macOS 的初始化逻辑，其它平台的代码仅返回占位值。欢迎提交 PR 一起完善。
-- 如果需要更丰富的功能（成就、好友、工作坊等），可以在现有桥接层继续暴露更多 Steam SDK 接口。
+- 当前聚焦于 `SteamAPI_Init/Shutdown` 与游玩状态上报，如需成就、好友、工作坊等高级能力，欢迎基于现有桥接层继续扩展。
 
 ## 许可证
 MIT License。详细信息见仓库内 `LICENSE` 文件。

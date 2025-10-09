@@ -48,13 +48,39 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 
+set(STEAM_API_DLL "")
+set(STEAM_API_DLL_SEARCH_PATHS
+  "${CMAKE_CURRENT_SOURCE_DIR}/steam_api64.dll"
+  "${CMAKE_CURRENT_SOURCE_DIR}/steam_api.dll"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/steamworks/redistributable_bin/win64/steam_api64.dll"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/steamworks/redistributable_bin/win32/steam_api.dll"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/steamworks/public/steam/lib/win64/steam_api64.dll"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/steamworks/public/steam/lib/win32/steam_api.dll"
+)
+
+foreach(candidate ${STEAM_API_DLL_SEARCH_PATHS})
+  if (EXISTS "${candidate}")
+    set(STEAM_API_DLL "${candidate}")
+    break()
+  endif()
+endforeach()
+
+if (STEAM_API_DLL)
+  get_filename_component(STEAM_API_DLL_NAME "${STEAM_API_DLL}" NAME)
+  add_custom_command(TARGET ${PLUGIN_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      "${STEAM_API_DLL}"
+      "$<TARGET_FILE_DIR:${PLUGIN_NAME}>/${STEAM_API_DLL_NAME}")
+endif()
+
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
-set(flutter_steamworks_bundled_libraries
-  ""
-  PARENT_SCOPE
-)
+set(flutter_steamworks_bundled_libraries)
+if (STEAM_API_DLL)
+  list(APPEND flutter_steamworks_bundled_libraries "${STEAM_API_DLL}")
+endif()
+set(flutter_steamworks_bundled_libraries "${flutter_steamworks_bundled_libraries}" PARENT_SCOPE)
 
 # === Tests ===
 # These unit tests can be run from a terminal after building the example, or
